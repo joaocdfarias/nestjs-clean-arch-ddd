@@ -40,4 +40,24 @@ describe('UserEntity', () => {
     expect(sut.props.createdAt).toBeDefined();
     expect(sut.props.createdAt).toBeInstanceOf(Date);
   });
+
+  it('should assert setter of name field', () => {
+    sut['name'] = 'other name';
+    expect(sut.props.name).toEqual('other name');
+  });
+
+  it('should assert setter of password field', () => {
+    sut['password'] = 'other password';
+    expect(sut.props.password).toEqual('other password');
+  });
+
+  it('should update name field', () => {
+    sut.update('other name');
+    expect(sut.props.name).toEqual('other name');
+  });
+
+  it('should update password field', () => {
+    sut.updatePassword('other password');
+    expect(sut.props.password).toEqual('other password');
+  });
 });
