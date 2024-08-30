@@ -12,6 +12,13 @@ describe('UserValidator', () => {
     sut = UserValidatorFactory.create();
   });
 
+  it('should validate', () => {
+    const props = UserDataBuilder({});
+    const isValid = sut.validate(props);
+    expect(isValid).toBeTruthy();
+    expect(sut.validatedData).toStrictEqual(new UserRules(props));
+  });
+
   describe('name', () => {
     it('should invalidate', () => {
       let isValid = sut.validate(null as any);
@@ -42,12 +49,43 @@ describe('UserValidator', () => {
         'name must be shorter than or equal to 255 characters',
       ]);
     });
+  });
 
-    it('should validate', () => {
-      const props = UserDataBuilder({});
-      const isValid = sut.validate(props);
-      expect(isValid).toBeTruthy();
-      expect(sut.validatedData).toStrictEqual(new UserRules(props));
+  describe('email', () => {
+    it('should invalidate', () => {
+      let isValid = sut.validate(null as any);
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['email']).toStrictEqual([
+        'email should not be empty',
+        'email must be an email',
+        'email must be a string',
+        'email must be shorter than or equal to 255 characters',
+      ]);
+
+      isValid = sut.validate({ ...UserDataBuilder({}), email: '' as any });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['email']).toStrictEqual([
+        'email should not be empty',
+        'email must be an email',
+      ]);
+
+      isValid = sut.validate({ ...UserDataBuilder({}), email: 1 as any });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['email']).toStrictEqual([
+        'email must be an email',
+        'email must be a string',
+        'email must be shorter than or equal to 255 characters',
+      ]);
+
+      isValid = sut.validate({
+        ...UserDataBuilder({}),
+        email: 'A'.repeat(256) as any,
+      });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['email']).toStrictEqual([
+        'email must be an email',
+        'email must be shorter than or equal to 255 characters',
+      ]);
     });
   });
 });
