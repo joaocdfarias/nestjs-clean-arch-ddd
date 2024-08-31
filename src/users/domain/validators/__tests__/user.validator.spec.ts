@@ -88,4 +88,38 @@ describe('UserValidator', () => {
       ]);
     });
   });
+
+  describe('password', () => {
+    it('should invalidate', () => {
+      let isValid = sut.validate(null as any);
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['password']).toStrictEqual([
+        'password should not be empty',
+        'password must be a string',
+        'password must be shorter than or equal to 100 characters',
+      ]);
+
+      isValid = sut.validate({ ...UserDataBuilder({}), password: '' as any });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['password']).toStrictEqual([
+        'password should not be empty',
+      ]);
+
+      isValid = sut.validate({ ...UserDataBuilder({}), password: 1 as any });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['password']).toStrictEqual([
+        'password must be a string',
+        'password must be shorter than or equal to 100 characters',
+      ]);
+
+      isValid = sut.validate({
+        ...UserDataBuilder({}),
+        password: 'A'.repeat(256) as any,
+      });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['password']).toStrictEqual([
+        'password must be shorter than or equal to 100 characters',
+      ]);
+    });
+  });
 });
