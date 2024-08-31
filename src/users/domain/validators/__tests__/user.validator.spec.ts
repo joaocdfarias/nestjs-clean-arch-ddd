@@ -1,3 +1,4 @@
+import { UserProps } from '@/users/domain/entities/user.entity';
 import { UserDataBuilder } from '@/users/domain/testing/helpers/user-data.builder';
 import {
   UserRules,
@@ -6,14 +7,15 @@ import {
 } from '@/users/domain/validators/user.validator';
 
 let sut: UserValidator;
+let props: UserProps;
 
 describe('UserValidator', () => {
   beforeEach(() => {
     sut = UserValidatorFactory.create();
+    props = UserDataBuilder({});
   });
 
   it('should validate', () => {
-    const props = UserDataBuilder({});
     const isValid = sut.validate(props);
     expect(isValid).toBeTruthy();
     expect(sut.validatedData).toStrictEqual(new UserRules(props));
@@ -119,6 +121,19 @@ describe('UserValidator', () => {
       expect(isValid).toBeFalsy();
       expect(sut.errors['password']).toStrictEqual([
         'password must be shorter than or equal to 100 characters',
+      ]);
+    });
+  });
+
+  describe('createdAt', () => {
+    it('should invalidate', () => {
+      const isValid = sut.validate({
+        ...props,
+        createdAt: '2024-01-01' as any,
+      });
+      expect(isValid).toBeFalsy();
+      expect(sut.errors['createdAt']).toStrictEqual([
+        'createdAt must be a Date instance',
       ]);
     });
   });
