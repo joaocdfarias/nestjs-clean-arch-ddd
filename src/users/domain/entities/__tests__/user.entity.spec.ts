@@ -6,12 +6,13 @@ describe('UserEntity', () => {
   let sut: UserEntity;
 
   beforeEach(() => {
+    UserEntity.validate = jest.fn();
     props = UserDataBuilder({});
-
     sut = new UserEntity(props);
   });
 
   it('should assert constructor method', () => {
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.name).toEqual(props.name);
     expect(sut.props.email).toEqual(props.email);
     expect(sut.props.password).toEqual(props.password);
@@ -53,11 +54,13 @@ describe('UserEntity', () => {
 
   it('should update name field', () => {
     sut.update('other name');
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.name).toEqual('other name');
   });
 
   it('should update password field', () => {
     sut.updatePassword('other password');
+    expect(UserEntity.validate).toHaveBeenCalled();
     expect(sut.props.password).toEqual('other password');
   });
 });
