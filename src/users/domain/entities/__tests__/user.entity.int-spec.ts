@@ -99,5 +99,15 @@ describe('UserEntity', () => {
       };
       expect(() => new UserEntity(props)).toThrow(EntityValidationError);
     });
+
+    it('should not throw error when creating a valid user', () => {
+      expect.assertions(0);
+
+      const props: UserProps = {
+        ...UserDataBuilder({}),
+      };
+
+      new UserEntity(props);
+    });
   });
 });
