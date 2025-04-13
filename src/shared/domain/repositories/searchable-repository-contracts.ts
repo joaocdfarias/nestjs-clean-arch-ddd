@@ -34,31 +34,68 @@ export class SearchParams {
     return this._page;
   }
 
-  private set page(value: number) {}
+  private set page(value: number) {
+    let _page = Number(value);
+
+    if (Number.isNaN(_page) || _page <= 0 || parseInt(_page as any) !== _page) {
+      _page = 1;
+    }
+
+    this._page = _page;
+  }
 
   get perPage() {
     return this._perPage;
   }
 
-  private set perPage(value: number) {}
+  private set perPage(value: number) {
+    let _perPage = Number(value);
+
+    if (
+      Number.isNaN(_perPage) ||
+      _perPage <= 0 ||
+      parseInt(_perPage as any) !== _perPage
+    ) {
+      _perPage = this._perPage;
+    }
+
+    this._perPage = _perPage;
+  }
 
   get sort() {
     return this._sort;
   }
 
-  private set sort(value: string | null) {}
+  private set sort(value: string | null) {
+    this._sort =
+      value === null || value === undefined || value === ''
+        ? null
+        : String(value);
+  }
 
   get sortDirection() {
     return this._sortDirection;
   }
 
-  private set sortDirection(value: SortDirection | null) {}
+  private set sortDirection(value: SortDirection | null) {
+    if (!this._sort) {
+      this._sortDirection = null;
+      return;
+    }
+
+    this._sortDirection = value !== 'ASC' && value !== 'DESC' ? 'DESC' : value;
+  }
 
   get filter() {
     return this._filter;
   }
 
-  private set filter(value: string | null) {}
+  private set filter(value: string | null) {
+    this._filter =
+      value === null || value === undefined || value === ''
+        ? null
+        : String(value);
+  }
 }
 
 export interface SearchableRepositoryInterface<
