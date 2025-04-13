@@ -22,12 +22,12 @@ export class SearchParams {
 
   protected _filter: string | null;
 
-  constructor(props: SearchProps) {
-    this._page = props.page;
-    this._perPage = props.perPage;
-    this._sort = props.sort;
-    this._sortDirection = props.sortDirection;
-    this._filter = props.filter;
+  constructor(props: SearchProps = {}) {
+    this.page = props.page;
+    this.perPage = props.perPage;
+    this.sort = props.sort;
+    this.sortDirection = props.sortDirection;
+    this.filter = props.filter;
   }
 
   get page() {
@@ -54,7 +54,8 @@ export class SearchParams {
     if (
       Number.isNaN(_perPage) ||
       _perPage <= 0 ||
-      parseInt(_perPage as any) !== _perPage
+      parseInt(_perPage as any) !== _perPage ||
+      typeof value === 'boolean'
     ) {
       _perPage = this._perPage;
     }
